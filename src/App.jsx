@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductList from "./components/ProductList";
-import Search from "./components/Search";
+import Search from "./components/search";
 import LoadingSpinner from "./components/LoadingSpinner";
 import Error from "./components/Error";
 import Navbar from "./components/Navbar";
