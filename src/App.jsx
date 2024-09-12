@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+// src/App.js
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductList from "./components/ProductList";
-import Search from "./components/Search";
+import Search from "./components/search";
 import LoadingSpinner from "./components/LoadingSpinner";
 import Error from "./components/Error";
 import Navbar from "./components/Navbar";
@@ -10,11 +11,6 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
-import { AuthContextProvider } from "./context/Authcontext";
-import Signin from "./pages/signIn";
-import Signup from "./pages/signUp";
-import ProductDetails from "./pages/ProductDetails"; // Import ProductDetails
-import { CartProvider } from "./context/CartContext";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -57,44 +53,41 @@ function App() {
     setSearch(value);
   };
 
+  const abc = useCallback(() => console.log("abc"), []);
+
   if (loading) return <LoadingSpinner />;
   if (error) return <Error message={error} />;
 
   return (
-    <AuthContextProvider>
-      <CartProvider>
-        <Router>
-          <Navbar />
-          <div className="min-h-screen bg-gray-100">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route
-                path="/products"
-                element={
-                  <ProductPage search={search} onSearchChange={handleSearchChange} posts={filteredPosts} />
-                }
-              />
-              <Route path="/products/:id" element={<ProductDetails />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/signin" element={<Signin />} />
-              <Route path="/signup" element={<Signup />} />
-            </Routes>
-          </div>
-          <Footer />
-        </Router>
-      </CartProvider>
-    </AuthContextProvider>
+    <Router>
+      <Navbar />
+      <div className="min-h-screen bg-gray-100">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/products"
+            element={
+              <>
+                <ProductPage search={search} onSearchChange={handleSearchChange} posts={filteredPosts} />
+              </>
+            }
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </div>
+      <Footer />
+    </Router>
   );
 }
 
-const ProductPage = React.memo(({ search, onSearchChange, posts }) => (
+const ProductPage = ({ search, onSearchChange, posts }) => (
   <div className="p-4">
     <h1 className="text-center my-5 text-4xl font-bold text-gray-900">Products</h1>
     <Search onSearchChange={onSearchChange} />
-    {posts.length > 0 ? <ProductList posts={posts} /> : <p>No products found.</p>}
+    <ProductList posts={posts} />
   </div>
-));
+);
 
 export default App;
 
